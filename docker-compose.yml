@@ -1,0 +1,62 @@
+version: "3"
+services:
+  zipkin:
+    build:
+      context: ./zipkin
+      dockerfile: Dockerfile
+    ports:
+      - "9411:9411"
+
+  service-registry:
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    ports:
+      - "8111:8111"
+
+  orders-service:
+    build:
+      context: ./orders-service
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"
+    depends_on:
+      - service-registry
+      - config-server
+
+  kitchen-service:
+    build:
+      context: ./kitchen-service
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    depends_on:
+      - service-registry
+      - config-server
+
+  courtier-service:
+    build:
+      context: ./courtier-service
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
+    depends_on:
+      - service-registry
+      - config-server
+
+  restaurant-service:
+    build:
+      context: ./restaurant-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on:
+      - service-registry
+      - config-server
